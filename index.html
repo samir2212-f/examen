@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🧠 Estudio Nocturno - Audio en Segundo Plano</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #ffd89b, #c7e9fb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .upload-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .drop-zone {
+            border: 2px dashed rgba(255,255,255,0.5);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .drop-zone:hover {
+            border-color: #ffd89b;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .file-input-label {
+            background: #ffd89b;
+            color: #1a2c3e;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 15px;
+            border: none;
+            font-size: 16px;
+        }
+
+        .file-input-label:hover {
+            background: #ffc267;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .controls-panel {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        select {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            background: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        button:hover { transform: scale(1.05); }
+
+        .btn-primary { background: #ffd89b; color: #1a2c3e; }
+        .btn-danger { background: #ff6b6b; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-warning { background: #ffc107; color: #1a2c3e; }
+        .btn-purple { background: #6f42c1; color: white; }
+
+        .text-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 30px;
+            overflow: hidden;
+            color: #1a2c3e;
+        }
+
+        .text-header {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .text-content {
+            padding: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: 'Segoe UI', 'Arial', 'Symbola', 'Noto Sans', monospace;
+            font-size: 15px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .highlight-chunk {
+            background-color: #ffd89b;
+            color: #1a2c3e;
+            border-radius: 4px;
+            padding: 2px 0;
+            box-shadow: 0 0 20px rgba(255, 216, 155, 0.5);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #ffd89b;
+            width: 0%;
+            transition: width 0.3s;
+            margin-top: 10px;
+            border-radius: 2px;
+        }
+
+        .file-queue {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .file-queue-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffd89b;
+        }
+
+        .file-queue-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 120px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .file-queue-item {
+            background: rgba(255,255,255,0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .file-queue-item.active {
+            border-color: #ffd89b;
+            background: rgba(255,216,155,0.2);
+        }
+
+        .file-queue-item .remove-btn {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 4px;
+        }
+
+        .battery-mode {
+            background: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        .battery-mode.warning {
+            background: #ffc107;
+            color: #1a2c3e;
+        }
+
+        .battery-mode.danger {
+            background: #ff6b6b;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .loop-indicator {
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .status-card {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .status-card .value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffd89b;
+        }
+
+        .status-card .label {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .warning-banner {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .warning-banner.success {
+            border-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .controls-panel { flex-direction: column; align-items: stretch; }
+            .control-group { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Estudio Nocturno</h1>
+            <p>Audio en segundo plano - Apaga la pantalla y ahorra batería</p>
+            <div class="badge">
+                🎙️ Voces Naturales | 🔁 Bucle Infinito | 🔋 Modo Ahorro
+                <span class="loop-indicator" id="loopIndicator">🔁 BUCLE ACTIVO</span>
+            </div>
+        </div>
+
+        <!-- BANNER DE INSTRUCCIONES -->
+        <div class="warning-banner success" id="instructionBanner">
+            💡 <strong>INSTRUCCIONES:</strong> 
+            1️⃣ Sube tus archivos<br>
+            2️⃣ Presiona <strong>"Iniciar Estudio"</strong><br>
+            3️⃣ <strong>APAGA LA PANTALLA</strong> - el audio seguirá sonando 🔥<br>
+            4️⃣ Para reanudar, solo desbloquea el teléfono
+        </div>
+
+        <!-- ESTADÍSTICAS -->
+        <div class="status-cards">
+            <div class="status-card">
+                <div class="value" id="totalPlays">0</div>
+                <div class="label">Veces completado</div>
+            </div>
+            <div class="status-card">
+                <div class="value" id="currentCycle">0</div>
+                <div class="label">Ciclo actual</div>
+            </div>
+            <div class="status-card">
+                <div class="value" id="filesRead">0</div>
+                <div class="label">Archivos leídos</div>
+            </div>
+            <div class="status-card">
+                <div class="value" id="batteryStatus">🔋 Activado</div>
+                <div class="label">Modo Ahorro</div>
+            </div>
+        </div>
+
+        <div class="upload-card">
+            <div id="dropZone" class="drop-zone">
+                <div style="font-size: 48px;">📚 📄 ∑ √ ≠</div>
+                <p>Arrastra o haz clic para subir tus archivos (PDF, Word, TXT)</p>
+                <label class="file-input-label">
+                    📁 Seleccionar archivos
+                    <input type="file" id="fileInput" accept=".pdf,.docx,.txt" multiple>
+                </label>
+                <div id="fileInfo" style="margin-top: 15px; font-size: 13px;"></div>
+            </div>
+
+            <div class="file-queue" id="fileQueue">
+                <div class="file-queue-title">📋 Cola de estudio (<span id="queueCount">0</span>)</div>
+                <div class="file-queue-list" id="queueList">
+                    <div style="color: #aaa; font-size: 13px; padding: 10px;">Sube tus archivos para comenzar</div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                    <button id="playQueueBtn" class="btn-success">▶️ Iniciar Estudio</button>
+                    <button id="pauseBtn" class="btn-primary">⏸️ Pausar</button>
+                    <button id="resumeBtn" class="btn-info">▶️ Reanudar</button>
+                    <button id="stopBtn" class="btn-danger">⏹️ Detener</button>
+                    <button id="nextFileBtn" class="btn-warning">⏭️ Siguiente</button>
+                    <button id="clearQueueBtn" class="btn-danger">🗑️ Vaciar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="control-group">
+                <span>🎤 Voz:</span>
+                <select id="spanishVoiceSelect">
+                    <option value="">Cargando voces...</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <span style="font-size: 13px; opacity: 0.8;" id="queueStatus">📌 Esperando reproducción...</span>
+            </div>
+        </div>
+
+        <div id="progressBar" class="progress-bar"></div>
+
+        <div class="text-container">
+            <div class="text-header">
+                <span>📄 <span id="currentFileName">Texto de estudio</span></span>
+                <span id="charCounter">0 caracteres</span>
+                <span id="fileProgress">0%</span>
+            </div>
+            <div id="textDisplay" class="text-content">
+                <div style="color: #aaa; text-align: center;">📚 Sube tus archivos y activa el modo de estudio</div>
+            </div>
+        </div>
+
+        <footer>
+            🔋 <strong>MODO AHORRO DE BATERÍA:</strong> Apaga la pantalla y el audio seguirá sonando<br>
+            🔁 Repetición infinita automática | 🎧 Recomendado: usa audífonos y deja el celular cargando
+        </footer>
+    </div>
+
+    <!-- Video fantasma para mantener el audio activo -->
+    <video id="ghostVideo" style="display:none; width:1px; height:1px;" loop muted playsinline></video>
+
+    <script>
+        // ========== ELEMENTOS ==========
+        const elements = {
+            dropZone: document.getElementById('dropZone'),
+            fileInput: document.getElementById('fileInput'),
+            fileInfo: document.getElementById('fileInfo'),
+            textDisplay: document.getElementById('textDisplay'),
+            charCounter: document.getElementById('charCounter'),
+            currentFileName: document.getElementById('currentFileName'),
+            fileProgress: document.getElementById('fileProgress'),
+            readBtn: document.getElementById('playQueueBtn'),
+            pauseBtn: document.getElementById('pauseBtn'),
+            resumeBtn: document.getElementById('resumeBtn'),
+            stopBtn: document.getElementById('stopBtn'),
+            nextFileBtn: document.getElementById('nextFileBtn'),
+            clearQueueBtn: document.getElementById('clearQueueBtn'),
+            spanishVoiceSelect: document.getElementById('spanishVoiceSelect'),
+            progressBar: document.getElementById('progressBar'),
+            queueList: document.getElementById('queueList'),
+            queueCount: document.getElementById('queueCount'),
+            queueStatus: document.getElementById('queueStatus'),
+            loopIndicator: document.getElementById('loopIndicator'),
+            totalPlays: document.getElementById('totalPlays'),
+            currentCycle: document.getElementById('currentCycle'),
+            filesRead: document.getElementById('filesRead'),
+            batteryStatus: document.getElementById('batteryStatus'),
+            instructionBanner: document.getElementById('instructionBanner'),
+        };
+
+        // ========== VIDEO FANTASMA PARA MANTENER EL AUDIO ==========
+        function initGhostVideo() {
+            const video = document.getElementById('ghostVideo');
+            // Crear un video de 1 segundo en blanco
+            const canvas = document.createElement('canvas');
+            canvas.width = 2;
+            canvas.height = 2;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, 2, 2);
+            
+            const stream = canvas.captureStream(1);
+            video.srcObject = stream;
+            
+            // Intentar reproducir el video fantasma
+            video.play().catch(e => console.log('Video fantasma no disponible, pero el audio funcionará'));
+            
+            console.log('🎬 Video fantasma activado - el audio no se pausará al apagar la pantalla');
+        }
+
+        // ========== REANUDAR AUDIO AL VOLVER ==========
+        function setupAutoResume() {
+            let wasPlaying = false;
+            
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    console.log('📱 Página visible - verificando audio');
+                    
+                    // Si estaba reproduciendo y el audio se detuvo, reanudar
+                    if (isQueuePlaying && isReading && !isPaused) {
+                        if (window.speechSynthesis && !window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+                            console.log('🔄 Reanudando audio automáticamente');
+                            if (currentChunkIndex < textChunks.length) {
+                                speakNextChunk();
+                            } else {
+                                goToNextFileOrLoop();
+                            }
+                        }
+                    }
+                    
+                    // Reintentar el video fantasma
+                    const video = document.getElementById('ghostVideo');
+                    if (video && video.paused) {
+                        video.play().catch(e => {});
+                    }
+                }
+            });
+        }
+
+        // ========== ESTADO ==========
+        let fileQueue = [];
+        let currentQueueIndex = 0;
+        let isReading = false;
+        let isPaused = false;
+        let currentChunkIndex = 0;
+        let textChunks = [];
+        let currentUtterance = null;
+        let isQueuePlaying = false;
+        let isLooping = true;
+        let fileIdCounter = 0;
+        let totalPlays = 0;
+
+        // ========== CARGAR VOCES ==========
+        function loadSpanishVoices() {
+            if (!window.speechSynthesis) {
+                elements.spanishVoiceSelect.innerHTML = '<option>❌ No soportado</option>';
+                return;
+            }
+
+            const updateVoices = () => {
+                const allVoices = window.speechSynthesis.getVoices();
+                let spanishVoices = allVoices.filter(voice => voice.lang.startsWith('es'));
+                
+                if (spanishVoices.length === 0) {
+                    elements.spanishVoiceSelect.innerHTML = '<option>⚠️ Sin voces en español</option>';
+                    return;
+                }
+                
+                spanishVoices.sort((a, b) => {
+                    const aGood = a.name.includes('Google') || a.name.includes('Microsoft');
+                    const bGood = b.name.includes('Google') || b.name.includes('Microsoft');
+                    if (aGood && !bGood) return -1;
+                    if (!aGood && bGood) return 1;
+                    return a.name.localeCompare(b.name);
+                });
+                
+                elements.spanishVoiceSelect.innerHTML = '';
+                spanishVoices.forEach(voice => {
+                    const option = document.createElement('option');
+                    option.value = voice.name;
+                    option.textContent = `🎙️ ${voice.name} (${voice.lang})`;
+                    elements.spanishVoiceSelect.appendChild(option);
+                });
+            };
+            
+            window.speechSynthesis.onvoiceschanged = updateVoices;
+            updateVoices();
+            
+            // Forzar carga de voces
+            setTimeout(updateVoices, 500);
+        }
+
+        function getSelectedVoice() {
+            const selectedName = elements.spanishVoiceSelect.value;
+            const voices = window.speechSynthesis.getVoices();
+            return voices.find(voice => voice.name === selectedName && voice.lang.startsWith('es'));
+        }
+
+        // ========== FUNCIONES DE LECTURA ==========
+        function highlightChunk(start, end) {
+            const currentFile = fileQueue[currentQueueIndex];
+            if (!currentFile || !currentFile.text) return;
+            
+            const text = currentFile.text;
+            if (start === undefined || end === undefined || start >= end) {
+                elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(text)}</div>`;
+                return;
+            }
+
+            start = Math.max(0, start);
+            end = Math.min(text.length, end);
+            if (start >= end) {
+                elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(text)}</div>`;
+                return;
+            }
+
+            const before = text.substring(0, start);
+            const chunk = text.substring(start, end);
+            const after = text.substring(end);
+
+            const html = `<span style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(before)}<span class="highlight-chunk">${escapeHtml(chunk)}</span>${escapeHtml(after)}</span>`;
+            elements.textDisplay.innerHTML = html;
+
+            const highlightElement = elements.textDisplay.querySelector('.highlight-chunk');
+            if (highlightElement) {
+                highlightElement.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            }
+        }
+
+        function clearHighlight() {
+            const currentFile = fileQueue[currentQueueIndex];
+            if (currentFile && currentFile.text) {
+                elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(currentFile.text)}</div>`;
+            }
+        }
+
+        function readCurrentFile() {
+            const currentFile = fileQueue[currentQueueIndex];
+            if (!currentFile || !currentFile.text || currentFile.text.trim() === "") {
+                return false;
+            }
+
+            if (isReading && !isPaused) {
+                stopReading();
+            }
+
+            isReading = true;
+            isPaused = false;
+            currentFile.status = 'reading';
+            updateQueueUI();
+
+            const text = currentFile.text;
+            const CHUNK_SIZE = 60000;
+            textChunks = [];
+            for (let i = 0; i < text.length; i += CHUNK_SIZE) {
+                const start = i;
+                const end = Math.min(i + CHUNK_SIZE, text.length);
+                textChunks.push({
+                    start: start,
+                    end: end,
+                    text: text.substring(start, end)
+                });
+            }
+
+            currentChunkIndex = 0;
+            elements.progressBar.style.width = '0%';
+            elements.currentFileName.textContent = currentFile.name;
+            elements.fileProgress.textContent = '0%';
+            clearHighlight();
+            speakNextChunk();
+            return true;
+        }
+
+        function speakNextChunk() {
+            if (!isReading || isPaused) return;
+            
+            if (currentChunkIndex >= textChunks.length) {
+                const currentFile = fileQueue[currentQueueIndex];
+                if (currentFile) {
+                    currentFile.status = 'done';
+                    totalPlays++;
+                    updateStats();
+                    updateQueueUI();
+                    isReading = false;
+                    elements.progressBar.style.width = '100%';
+                    elements.fileProgress.textContent = '100%';
+                    setTimeout(() => {
+                        elements.progressBar.style.width = '0%';
+                        elements.fileProgress.textContent = '0%';
+                        clearHighlight();
+                    }, 500);
+                    
+                    setTimeout(() => {
+                        if (isQueuePlaying && isLooping) {
+                            goToNextFileOrLoop();
+                        }
+                    }, 800);
+                }
+                return;
+            }
+            
+            const chunkData = textChunks[currentChunkIndex];
+            const chunkText = chunkData.text;
+            const selectedVoice = getSelectedVoice();
+            const utterance = new SpeechSynthesisUtterance(chunkText);
+            
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                utterance.lang = selectedVoice.lang;
+            } else {
+                utterance.lang = 'es-ES';
+            }
+            
+            utterance.rate = 0.95;
+            utterance.pitch = 1.0;
+            utterance.volume = 1;
+            
+            highlightChunk(chunkData.start, chunkData.end);
+            
+            utterance.onend = () => {
+                currentChunkIndex++;
+                const progress = (currentChunkIndex / textChunks.length) * 100;
+                elements.progressBar.style.width = `${progress}%`;
+                elements.fileProgress.textContent = `${Math.round(progress)}%`;
+                speakNextChunk();
+            };
+            
+            utterance.onerror = (event) => {
+                console.warn("Error en lectura:", event);
+                currentChunkIndex++;
+                speakNextChunk();
+            };
+            
+            currentUtterance = utterance;
+            window.speechSynthesis.speak(utterance);
+            
+            const currentFile = fileQueue[currentQueueIndex];
+            elements.queueStatus.textContent = `🎙️ Leyendo "${currentFile ? currentFile.name : ''}" - fragmento ${currentChunkIndex + 1} de ${textChunks.length}`;
+        }
+
+        function goToNextFileOrLoop() {
+            stopReading();
+            
+            let nextIndex = -1;
+            for (let i = currentQueueIndex + 1; i < fileQueue.length; i++) {
+                if (fileQueue[i].status === 'pending' || fileQueue[i].status === 'done') {
+                    nextIndex = i;
+                    break;
+                }
+            }
+            
+            if (nextIndex === -1) {
+                if (isLooping) {
+                    for (let i = 0; i < fileQueue.length; i++) {
+                        if (fileQueue[i].status === 'pending' || fileQueue[i].status === 'done') {
+                            nextIndex = i;
+                            break;
+                        }
+                    }
+                    if (nextIndex === -1) {
+                        fileQueue.forEach(f => {
+                            if (f.status === 'done' || f.status === 'error') {
+                                f.status = 'pending';
+                            }
+                        });
+                        nextIndex = 0;
+                    }
+                    elements.queueStatus.textContent = '🔄 Reiniciando cola (bucle infinito)...';
+                    elements.loopIndicator.style.display = 'inline-block';
+                } else {
+                    isQueuePlaying = false;
+                    elements.queueStatus.textContent = '✅ Todos los archivos han sido leídos';
+                    elements.loopIndicator.style.display = 'none';
+                    return;
+                }
+            }
+            
+            if (nextIndex === -1) {
+                isQueuePlaying = false;
+                elements.queueStatus.textContent = '⚠️ No hay archivos disponibles';
+                return;
+            }
+            
+            currentQueueIndex = nextIndex;
+            const file = fileQueue[currentQueueIndex];
+            if (file.status === 'done') {
+                file.status = 'pending';
+            }
+            file.status = 'reading';
+            updateQueueUI();
+            elements.currentFileName.textContent = file.name;
+            elements.charCounter.textContent = file.text.length.toLocaleString() + " caracteres";
+            readCurrentFile();
+        }
+
+        function pauseReading() {
+            if (isReading && !isPaused) {
+                isPaused = true;
+                if (window.speechSynthesis && window.speechSynthesis.speaking) {
+                    window.speechSynthesis.pause();
+                }
+                elements.queueStatus.textContent = '⏸️ Pausado';
+            }
+        }
+
+        function resumeReading() {
+            if (isReading && isPaused) {
+                isPaused = false;
+                if (window.speechSynthesis && window.speechSynthesis.paused) {
+                    window.speechSynthesis.resume();
+                } else {
+                    speakNextChunk();
+                }
+                elements.queueStatus.textContent = '▶️ Reanudando...';
+            }
+        }
+
+        function stopReading() {
+            isReading = false;
+            isPaused = false;
+            if (window.speechSynthesis) {
+                window.speechSynthesis.cancel();
+            }
+            currentUtterance = null;
+            currentChunkIndex = 0;
+            elements.progressBar.style.width = '0%';
+            elements.fileProgress.textContent = '0%';
+            clearHighlight();
+            
+            const currentFile = fileQueue[currentQueueIndex];
+            if (currentFile && currentFile.status === 'reading') {
+                currentFile.status = 'pending';
+                updateQueueUI();
+            }
+        }
+
+        // ========== ACTUALIZAR UI ==========
+        function updateStats() {
+            elements.totalPlays.textContent = totalPlays;
+            const done = fileQueue.filter(f => f.status === 'done').length;
+            elements.filesRead.textContent = done;
+            if (fileQueue.length > 0) {
+                elements.currentCycle.textContent = Math.floor(done / fileQueue.length) + 1;
+            }
+        }
+
+        function updateQueueUI() {
+            elements.queueList.innerHTML = '';
+            if (fileQueue.length === 0) {
+                elements.queueList.innerHTML = '<div style="color: #aaa; font-size: 13px; padding: 10px;">No hay archivos en la cola.</div>';
+                elements.queueCount.textContent = '0';
+                return;
+            }
+            
+            elements.queueCount.textContent = fileQueue.length;
+            
+            fileQueue.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = `file-queue-item ${index === currentQueueIndex && (item.status === 'reading' || isReading) ? 'active' : ''}`;
+                
+                const statusMap = {
+                    'pending': '⏳',
+                    'reading': '🔊',
+                    'done': '✅',
+                    'error': '❌'
+                };
+                
+                const statusTextMap = {
+                    'pending': 'pendiente',
+                    'reading': 'leyendo...',
+                    'done': 'completado',
+                    'error': 'error'
+                };
+                
+                div.innerHTML = `
+                    <span class="file-index">${index + 1}</span>
+                    <span>${item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name}</span>
+                    <span class="file-status ${item.status}">${statusMap[item.status] || '⏳'} ${statusTextMap[item.status] || 'pendiente'}</span>
+                    <button class="remove-btn" data-id="${item.id}" title="Eliminar">✕</button>
+                `;
+                
+                div.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('remove-btn')) return;
+                    if (item.text) {
+                        currentQueueIndex = index;
+                        elements.currentFileName.textContent = item.name;
+                        elements.charCounter.textContent = item.text.length.toLocaleString() + " caracteres";
+                        displayText(item.text);
+                        stopReading();
+                        updateQueueUI();
+                    }
+                });
+                
+                const removeBtn = div.querySelector('.remove-btn');
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removeFile(item.id);
+                });
+                
+                elements.queueList.appendChild(div);
+            });
+        }
+
+        function removeFile(id) {
+            const index = fileQueue.findIndex(item => item.id === id);
+            if (index === -1) return;
+            
+            if (isReading && index === currentQueueIndex) {
+                stopReading();
+            }
+            
+            fileQueue.splice(index, 1);
+            
+            if (currentQueueIndex >= fileQueue.length) {
+                currentQueueIndex = Math.max(0, fileQueue.length - 1);
+            }
+            
+            updateQueueUI();
+            updateStats();
+            
+            if (fileQueue.length > 0 && fileQueue[currentQueueIndex] && fileQueue[currentQueueIndex].text) {
+                const file = fileQueue[currentQueueIndex];
+                elements.currentFileName.textContent = file.name;
+                elements.charCounter.textContent = file.text.length.toLocaleString() + " caracteres";
+                displayText(file.text);
+            } else {
+                elements.textDisplay.innerHTML = '<div style="color: #aaa; text-align: center;">📂 No hay archivos en la cola</div>';
+                elements.currentFileName.textContent = 'Sin archivo';
+                elements.charCounter.textContent = '0 caracteres';
+            }
+        }
+
+        function clearQueue() {
+            stopReading();
+            isQueuePlaying = false;
+            fileQueue = [];
+            currentQueueIndex = 0;
+            updateQueueUI();
+            updateStats();
+            elements.textDisplay.innerHTML = '<div style="color: #aaa; text-align: center;">📂 Cola vaciada</div>';
+            elements.currentFileName.textContent = 'Sin archivo';
+            elements.charCounter.textContent = '0 caracteres';
+            elements.queueStatus.textContent = '📌 Cola vacía';
+            elements.progressBar.style.width = '0%';
+            elements.fileProgress.textContent = '0%';
+            elements.loopIndicator.style.display = 'none';
+        }
+
+        // ========== PROCESAR ARCHIVOS ==========
+        async function processFiles(files) {
+            const filesArray = Array.from(files);
+            
+            for (const file of filesArray) {
+                const fileId = fileIdCounter++;
+                const queueItem = {
+                    id: fileId,
+                    file: file,
+                    name: file.name,
+                    text: '',
+                    status: 'pending'
+                };
+                fileQueue.push(queueItem);
+            }
+            
+            updateQueueUI();
+            elements.fileInfo.textContent = `📥 ${filesArray.length} archivos agregados`;
+            
+            for (const item of fileQueue) {
+                if (item.status === 'pending' && !item.text) {
+                    try {
+                        const text = await extractText(item.file);
+                        item.text = text;
+                        if (text.trim() === "") {
+                            item.status = 'error';
+                            item.text = "[Sin texto extraíble]";
+                        }
+                    } catch (error) {
+                        item.status = 'error';
+                        item.text = `[Error: ${error.message}]`;
+                        console.error(`Error procesando ${item.name}:`, error);
+                    }
+                    updateQueueUI();
+                }
+            }
+            
+            if (fileQueue.length > 0 && !isReading) {
+                currentQueueIndex = 0;
+                const firstFile = fileQueue[0];
+                if (firstFile.text) {
+                    elements.currentFileName.textContent = firstFile.name;
+                    elements.charCounter.textContent = firstFile.text.length.toLocaleString() + " caracteres";
+                    displayText(firstFile.text);
+                }
+            }
+            
+            elements.fileInfo.textContent = `✅ ${fileQueue.length} archivos listos`;
+        }
+
+        async function extractText(file) {
+            const extension = file.name.split('.').pop().toLowerCase();
+            
+            if (extension === 'txt') {
+                return await file.text();
+            }
+            else if (extension === 'pdf') {
+                await loadPDFjs();
+                const arrayBuffer = await file.arrayBuffer();
+                const pdfjsLib = window.pdfjsLib;
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let fullText = [];
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    const strings = content.items.map(item => item.str);
+                    fullText.push(strings.join(' '));
+                }
+                return fullText.join('\n\n');
+            }
+            else if (extension === 'docx') {
+                await loadMammoth();
+                const arrayBuffer = await file.arrayBuffer();
+                const result = await window.mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+                return result.value;
+            }
+            else {
+                throw new Error("Formato no soportado. Usa PDF, DOCX o TXT");
+            }
+        }
+
+        function displayText(text) {
+            if (!text || text.trim() === "") {
+                elements.textDisplay.innerHTML = "<div style='color:#aaa'>⚠️ No se pudo extraer texto</div>";
+                return;
+            }
+            elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(text)}</div>`;
+            elements.textDisplay.scrollTop = 0;
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function loadPDFjs() {
+            return new Promise((resolve, reject) => {
+                if (window.pdfjsLib) { resolve(); return; }
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js';
+                script.onload = resolve;
+                script.onerror = () => reject(new Error('Error cargando PDF.js'));
+                document.head.appendChild(script);
+            });
+        }
+
+        function loadMammoth() {
+            return new Promise((resolve, reject) => {
+                if (window.mammoth) { resolve(); return; }
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
+                script.onload = resolve;
+                script.onerror = () => reject(new Error('Error cargando Mammoth'));
+                document.head.appendChild(script);
+            });
+        }
+
+        // ========== DRAG & DROP ==========
+        function setupDragAndDrop() {
+            elements.dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                elements.dropZone.style.borderColor = '#ffd89b';
+            });
+            elements.dropZone.addEventListener('dragleave', () => {
+                elements.dropZone.style.borderColor = 'rgba(255,255,255,0.5)';
+            });
+            elements.dropZone.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                elements.dropZone.style.borderColor = 'rgba(255,255,255,0.5)';
+                if (e.dataTransfer.files.length) {
+                    stopReading();
+                    await processFiles(e.dataTransfer.files);
+                }
+            });
+            elements.dropZone.addEventListener('click', () => elements.fileInput.click());
+            elements.fileInput.addEventListener('change', async (e) => {
+                if (elements.fileInput.files.length) {
+                    stopReading();
+                    await processFiles(elements.fileInput.files);
+                    elements.fileInput.value = '';
+                }
+            });
+        }
+
+        // ========== MONITOREO DE AUDIO ==========
+        function setupAudioMonitor() {
+            setInterval(() => {
+                // Si está reproduciendo y el audio se detuvo inesperadamente
+                if (isQueuePlaying && isReading && !isPaused) {
+                    if (window.speechSynthesis && !window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+                        console.log('⚠️ Audio detenido inesperadamente, reanudando...');
+                        if (currentChunkIndex < textChunks.length) {
+                            speakNextChunk();
+                        } else {
+                            goToNextFileOrLoop();
+                        }
+                    }
+                }
+                
+                // Verificar si la página está visible
+                if (document.hidden) {
+                    // La página está oculta (pantalla apagada), pero el audio sigue
+                    elements.batteryStatus.textContent = '🔋 Audio activo (pantalla apagada)';
+                    elements.batteryStatus.className = 'battery-mode';
+                } else {
+                    elements.batteryStatus.textContent = '🔋 Modo Ahorro';
+                    elements.batteryStatus.className = 'battery-mode';
+                }
+            }, 3000);
+        }
+
+        // ========== INICIALIZAR ==========
+        function init() {
+            // Iniciar video fantasma
+            initGhostVideo();
+            
+            // Configurar reanudación automática
+            setupAutoResume();
+            
+            // Configurar monitor de audio
+            setupAudioMonitor();
+            
+            // Drag & Drop
+            setupDragAndDrop();
+            
+            // Voces
+            loadSpanishVoices();
+            
+            // Mostrar bucle activo
+            elements.loopIndicator.style.display = 'inline-block';
+            
+            // Botón de reproducción
+            elements.readBtn.addEventListener('click', () => {
+                if (fileQueue.length === 0) {
+                    alert('No hay archivos en la cola. Sube uno o varios archivos primero.');
+                    return;
+                }
+                
+                fileQueue.forEach(f => {
+                    if (f.status === 'done' || f.status === 'error') {
+                        f.status = 'pending';
+                    }
+                });
+                
+                let startIndex = -1;
+                for (let i = 0; i < fileQueue.length; i++) {
+                    if (fileQueue[i].status === 'pending') {
+                        startIndex = i;
+                        break;
+                    }
+                }
+                
+                if (startIndex === -1) {
+                    alert('No hay archivos pendientes.');
+                    return;
+                }
+                
+                isQueuePlaying = true;
+                isLooping = true;
+                elements.loopIndicator.style.display = 'inline-block';
+                currentQueueIndex = startIndex;
+                const file = fileQueue[currentQueueIndex];
+                file.status = 'reading';
+                updateQueueUI();
+                elements.currentFileName.textContent = file.name;
+                elements.charCounter.textContent = file.text ? file.text.length.toLocaleString() + " caracteres" : "0 caracteres";
+                if (file.text) {
+                    displayText(file.text);
+                }
+                readCurrentFile();
+                
+                // Activar video fantasma
+                const video = document.getElementById('ghostVideo');
+                if (video) {
+                    video.play().catch(e => {});
+                }
+                
+                // Mostrar mensaje
+                elements.instructionBanner.innerHTML = `
+                    🔥 <strong>¡AUDIO ACTIVO!</strong> Ahora puedes <strong>APAGAR LA PANTALLA</strong> y el audio seguirá sonando.<br>
+                    Para reanudar, solo desbloquea el teléfono.
+                `;
+                elements.instructionBanner.className = 'warning-banner success';
+            });
+            
+            elements.nextFileBtn.addEventListener('click', () => {
+                if (fileQueue.length === 0) {
+                    alert('No hay archivos en la cola.');
+                    return;
+                }
+                if (isQueuePlaying && isLooping) {
+                    goToNextFileOrLoop();
+                } else {
+                    let nextIndex = -1;
+                    for (let i = currentQueueIndex + 1; i < fileQueue.length; i++) {
+                        if (fileQueue[i].status === 'pending' || fileQueue[i].status === 'done') {
+                            nextIndex = i;
+                            break;
+                        }
+                    }
+                    if (nextIndex === -1) {
+                        alert('No hay más archivos en la cola.');
+                        return;
+                    }
+                    stopReading();
+                    currentQueueIndex = nextIndex;
+                    const file = fileQueue[currentQueueIndex];
+                    if (file.status === 'done') file.status = 'pending';
+                    file.status = 'reading';
+                    updateQueueUI();
+                    elements.currentFileName.textContent = file.name;
+                    elements.charCounter.textContent = file.text.length.toLocaleString() + " caracteres";
+                    readCurrentFile();
+                }
+            });
+            
+            elements.clearQueueBtn.addEventListener('click', clearQueue);
+            elements.pauseBtn.addEventListener('click', pauseReading);
+            elements.resumeBtn.addEventListener('click', resumeReading);
+            
+            elements.stopBtn.addEventListener('click', () => {
+                stopReading();
+                isQueuePlaying = false;
+                isLooping = false;
+                elements.loopIndicator.style.display = 'none';
+                elements.queueStatus.textContent = '⏹️ Detenido';
+                const currentFile = fileQueue[currentQueueIndex];
+                if (currentFile && currentFile.status === 'reading') {
+                    currentFile.status = 'pending';
+                    updateQueueUI();
+                }
+                
+                // Detener video fantasma
+                const video = document.getElementById('ghostVideo');
+                if (video) {
+                    video.pause();
+                }
+            });
+            
+            // Manejar cuando se cierra la página
+            window.addEventListener('beforeunload', () => {
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                }
+                const video = document.getElementById('ghostVideo');
+                if (video) {
+                    video.pause();
+                }
+            });
+        }
+        
+        // Iniciar cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
