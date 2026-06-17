@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🧠 Estudio Nocturno - Audio en Segundo Plano</title>
+    <title>🔊 Lector Nocturno - Versión Estable</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -15,32 +15,11 @@
             color: #fff;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1400px; margin: 0 auto; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(90deg, #ffd89b, #c7e9fb);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .badge {
-            background: rgba(255,255,255,0.2);
-            border-radius: 50px;
-            padding: 8px 16px;
-            display: inline-block;
-            margin-top: 10px;
-            font-size: 14px;
-        }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5rem; background: linear-gradient(90deg, #ffd89b, #c7e9fb); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .badge { background: rgba(255,255,255,0.2); border-radius: 50px; padding: 8px 16px; display: inline-block; margin-top: 10px; font-size: 14px; }
 
         .upload-card {
             background: rgba(255,255,255,0.1);
@@ -59,11 +38,7 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
-        .drop-zone:hover {
-            border-color: #ffd89b;
-            background: rgba(255,255,255,0.05);
-        }
+        .drop-zone:hover { border-color: #ffd89b; background: rgba(255,255,255,0.05); }
 
         .file-input-label {
             background: #ffd89b;
@@ -77,14 +52,9 @@
             border: none;
             font-size: 16px;
         }
+        .file-input-label:hover { background: #ffc267; }
 
-        .file-input-label:hover {
-            background: #ffc267;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
+        input[type="file"] { display: none; }
 
         .controls-panel {
             background: rgba(255,255,255,0.1);
@@ -99,12 +69,7 @@
             justify-content: space-between;
         }
 
-        .control-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .control-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
         select {
             padding: 10px 20px;
@@ -124,7 +89,6 @@
             transition: 0.3s;
             font-size: 14px;
         }
-
         button:hover { transform: scale(1.05); }
 
         .btn-primary { background: #ffd89b; color: #1a2c3e; }
@@ -156,10 +120,9 @@
             max-height: 400px;
             overflow-y: auto;
             white-space: pre-wrap;
-            font-family: 'Segoe UI', 'Arial', 'Symbola', 'Noto Sans', monospace;
+            font-family: 'Segoe UI', 'Arial', monospace;
             font-size: 15px;
             line-height: 1.6;
-            position: relative;
         }
 
         .highlight-chunk {
@@ -229,42 +192,6 @@
             padding: 0 4px;
         }
 
-        .battery-mode {
-            background: #28a745;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            animation: pulse 2s infinite;
-        }
-
-        .battery-mode.warning {
-            background: #ffc107;
-            color: #1a2c3e;
-        }
-
-        .battery-mode.danger {
-            background: #ff6b6b;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .loop-indicator {
-            background: #ff6b6b;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            animation: pulse 1.5s infinite;
-        }
-
         .status-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -280,31 +207,54 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .status-card .value {
-            font-size: 22px;
+        .status-card .value { font-size: 22px; font-weight: bold; color: #ffd89b; }
+        .status-card .label { font-size: 11px; opacity: 0.7; margin-top: 5px; }
+
+        .loop-indicator {
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
             font-weight: bold;
-            color: #ffd89b;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
         }
 
-        .status-card .label {
-            font-size: 11px;
-            opacity: 0.7;
-            margin-top: 5px;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.95); }
         }
 
-        .warning-banner {
-            background: rgba(255, 107, 107, 0.2);
-            border: 1px solid #ff6b6b;
+        .log-panel {
+            background: rgba(0,0,0,0.5);
             border-radius: 15px;
             padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
+            margin-top: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .warning-banner.success {
-            border-color: #28a745;
-            background: rgba(40, 167, 69, 0.1);
+        .log-panel .log-entry { padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .log-panel .log-entry .time { color: #ffd89b; margin-right: 10px; }
+        .log-panel .log-entry .msg { color: #aaa; }
+        .log-panel .log-entry .msg.success { color: #28a745; }
+        .log-panel .log-entry .msg.error { color: #ff6b6b; }
+        .log-panel .log-entry .msg.warning { color: #ffc107; }
+
+        .voice-status {
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 12px;
         }
+
+        .voice-status.ready { background: #28a745; color: white; }
+        .voice-status.loading { background: #ffc107; color: #1a2c3e; }
+        .voice-status.error { background: #ff6b6b; color: white; }
 
         footer {
             text-align: center;
@@ -323,21 +273,12 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🧠 Estudio Nocturno</h1>
-            <p>Audio en segundo plano - Apaga la pantalla y ahorra batería</p>
+            <h1>🔊 Lector Nocturno</h1>
+            <p>Versión Estable - Reproducción Infinita</p>
             <div class="badge">
-                🎙️ Voces Naturales | 🔁 Bucle Infinito | 🔋 Modo Ahorro
+                🎙️ Voces Naturales | 🔁 Bucle Infinito | 📱 Estable
                 <span class="loop-indicator" id="loopIndicator">🔁 BUCLE ACTIVO</span>
             </div>
-        </div>
-
-        <!-- BANNER DE INSTRUCCIONES -->
-        <div class="warning-banner success" id="instructionBanner">
-            💡 <strong>INSTRUCCIONES:</strong> 
-            1️⃣ Sube tus archivos<br>
-            2️⃣ Presiona <strong>"Iniciar Estudio"</strong><br>
-            3️⃣ <strong>APAGA LA PANTALLA</strong> - el audio seguirá sonando 🔥<br>
-            4️⃣ Para reanudar, solo desbloquea el teléfono
         </div>
 
         <!-- ESTADÍSTICAS -->
@@ -355,14 +296,14 @@
                 <div class="label">Archivos leídos</div>
             </div>
             <div class="status-card">
-                <div class="value" id="batteryStatus">🔋 Activado</div>
-                <div class="label">Modo Ahorro</div>
+                <div class="value" id="voiceStatusDisplay">⏳ Cargando...</div>
+                <div class="label">Estado de voz</div>
             </div>
         </div>
 
         <div class="upload-card">
             <div id="dropZone" class="drop-zone">
-                <div style="font-size: 48px;">📚 📄 ∑ √ ≠</div>
+                <div style="font-size: 48px;">📚 📄</div>
                 <p>Arrastra o haz clic para subir tus archivos (PDF, Word, TXT)</p>
                 <label class="file-input-label">
                     📁 Seleccionar archivos
@@ -383,6 +324,7 @@
                     <button id="stopBtn" class="btn-danger">⏹️ Detener</button>
                     <button id="nextFileBtn" class="btn-warning">⏭️ Siguiente</button>
                     <button id="clearQueueBtn" class="btn-danger">🗑️ Vaciar</button>
+                    <button id="testVoiceBtn" class="btn-purple">🔊 Probar Voz</button>
                 </div>
             </div>
         </div>
@@ -393,6 +335,7 @@
                 <select id="spanishVoiceSelect">
                     <option value="">Cargando voces...</option>
                 </select>
+                <span class="voice-status loading" id="voiceStatusBadge">⏳ Cargando...</span>
             </div>
             <div class="control-group">
                 <span style="font-size: 13px; opacity: 0.8;" id="queueStatus">📌 Esperando reproducción...</span>
@@ -412,14 +355,19 @@
             </div>
         </div>
 
+        <!-- PANEL DE REGISTRO -->
+        <div class="log-panel" id="logPanel">
+            <div style="color: #ffd89b; font-weight: bold; margin-bottom: 10px;">📋 REGISTRO DE ACTIVIDAD</div>
+            <div id="logEntries">
+                <div class="log-entry"><span class="time">[INICIO]</span><span class="msg">Sistema listo. Esperando archivos...</span></div>
+            </div>
+        </div>
+
         <footer>
-            🔋 <strong>MODO AHORRO DE BATERÍA:</strong> Apaga la pantalla y el audio seguirá sonando<br>
-            🔁 Repetición infinita automática | 🎧 Recomendado: usa audífonos y deja el celular cargando
+            🔁 Repetición infinita automática | 🔊 Si no escuchas, prueba el botón "Probar Voz"<br>
+            📱 Versión estable para dispositivos móviles
         </footer>
     </div>
-
-    <!-- Video fantasma para mantener el audio activo -->
-    <video id="ghostVideo" style="display:none; width:1px; height:1px;" loop muted playsinline></video>
 
     <script>
         // ========== ELEMENTOS ==========
@@ -437,6 +385,7 @@
             stopBtn: document.getElementById('stopBtn'),
             nextFileBtn: document.getElementById('nextFileBtn'),
             clearQueueBtn: document.getElementById('clearQueueBtn'),
+            testVoiceBtn: document.getElementById('testVoiceBtn'),
             spanishVoiceSelect: document.getElementById('spanishVoiceSelect'),
             progressBar: document.getElementById('progressBar'),
             queueList: document.getElementById('queueList'),
@@ -446,57 +395,25 @@
             totalPlays: document.getElementById('totalPlays'),
             currentCycle: document.getElementById('currentCycle'),
             filesRead: document.getElementById('filesRead'),
-            batteryStatus: document.getElementById('batteryStatus'),
-            instructionBanner: document.getElementById('instructionBanner'),
+            voiceStatusDisplay: document.getElementById('voiceStatusDisplay'),
+            voiceStatusBadge: document.getElementById('voiceStatusBadge'),
+            logEntries: document.getElementById('logEntries'),
         };
 
-        // ========== VIDEO FANTASMA PARA MANTENER EL AUDIO ==========
-        function initGhostVideo() {
-            const video = document.getElementById('ghostVideo');
-            // Crear un video de 1 segundo en blanco
-            const canvas = document.createElement('canvas');
-            canvas.width = 2;
-            canvas.height = 2;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, 2, 2);
-            
-            const stream = canvas.captureStream(1);
-            video.srcObject = stream;
-            
-            // Intentar reproducir el video fantasma
-            video.play().catch(e => console.log('Video fantasma no disponible, pero el audio funcionará'));
-            
-            console.log('🎬 Video fantasma activado - el audio no se pausará al apagar la pantalla');
-        }
-
-        // ========== REANUDAR AUDIO AL VOLVER ==========
-        function setupAutoResume() {
-            let wasPlaying = false;
-            
-            document.addEventListener('visibilitychange', () => {
-                if (document.visibilityState === 'visible') {
-                    console.log('📱 Página visible - verificando audio');
-                    
-                    // Si estaba reproduciendo y el audio se detuvo, reanudar
-                    if (isQueuePlaying && isReading && !isPaused) {
-                        if (window.speechSynthesis && !window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
-                            console.log('🔄 Reanudando audio automáticamente');
-                            if (currentChunkIndex < textChunks.length) {
-                                speakNextChunk();
-                            } else {
-                                goToNextFileOrLoop();
-                            }
-                        }
-                    }
-                    
-                    // Reintentar el video fantasma
-                    const video = document.getElementById('ghostVideo');
-                    if (video && video.paused) {
-                        video.play().catch(e => {});
-                    }
-                }
-            });
+        // ========== SISTEMA DE LOG ==========
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            const time = new Date().toLocaleTimeString();
+            const msgClass = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : '';
+            entry.innerHTML = `<span class="time">[${time}]</span><span class="msg ${msgClass}">${message}</span>`;
+            elements.logEntries.appendChild(entry);
+            // Mantener solo los últimos 50 mensajes
+            while (elements.logEntries.children.length > 50) {
+                elements.logEntries.removeChild(elements.logEntries.firstChild);
+            }
+            elements.logEntries.scrollTop = elements.logEntries.scrollHeight;
+            console.log(`[${time}] ${message}`);
         }
 
         // ========== ESTADO ==========
@@ -511,51 +428,144 @@
         let isLooping = true;
         let fileIdCounter = 0;
         let totalPlays = 0;
+        let voicesLoaded = false;
+        let voiceLoadAttempts = 0;
 
-        // ========== CARGAR VOCES ==========
+        // ========== CARGAR VOCES CON ESPERA ACTIVA ==========
         function loadSpanishVoices() {
-            if (!window.speechSynthesis) {
-                elements.spanishVoiceSelect.innerHTML = '<option>❌ No soportado</option>';
-                return;
-            }
-
-            const updateVoices = () => {
-                const allVoices = window.speechSynthesis.getVoices();
-                let spanishVoices = allVoices.filter(voice => voice.lang.startsWith('es'));
-                
-                if (spanishVoices.length === 0) {
-                    elements.spanishVoiceSelect.innerHTML = '<option>⚠️ Sin voces en español</option>';
+            return new Promise((resolve) => {
+                if (!window.speechSynthesis) {
+                    addLog('❌ Speech Synthesis no soportado en este navegador', 'error');
+                    elements.spanishVoiceSelect.innerHTML = '<option>❌ No soportado</option>';
+                    elements.voiceStatusDisplay.textContent = '❌ No soportado';
+                    elements.voiceStatusBadge.textContent = '❌ Error';
+                    elements.voiceStatusBadge.className = 'voice-status error';
+                    resolve(false);
                     return;
                 }
-                
-                spanishVoices.sort((a, b) => {
-                    const aGood = a.name.includes('Google') || a.name.includes('Microsoft');
-                    const bGood = b.name.includes('Google') || b.name.includes('Microsoft');
-                    if (aGood && !bGood) return -1;
-                    if (!aGood && bGood) return 1;
-                    return a.name.localeCompare(b.name);
-                });
-                
-                elements.spanishVoiceSelect.innerHTML = '';
-                spanishVoices.forEach(voice => {
-                    const option = document.createElement('option');
-                    option.value = voice.name;
-                    option.textContent = `🎙️ ${voice.name} (${voice.lang})`;
-                    elements.spanishVoiceSelect.appendChild(option);
-                });
-            };
-            
-            window.speechSynthesis.onvoiceschanged = updateVoices;
-            updateVoices();
-            
-            // Forzar carga de voces
-            setTimeout(updateVoices, 500);
+
+                const checkVoices = () => {
+                    const allVoices = window.speechSynthesis.getVoices();
+                    
+                    if (allVoices.length === 0) {
+                        voiceLoadAttempts++;
+                        if (voiceLoadAttempts < 10) {
+                            addLog(`⏳ Esperando voces... (intento ${voiceLoadAttempts}/10)`, 'warning');
+                            setTimeout(checkVoices, 500);
+                        } else {
+                            addLog('⚠️ No se cargaron voces. Usando voz por defecto.', 'warning');
+                            elements.spanishVoiceSelect.innerHTML = '<option value="default">🔊 Voz por defecto</option>';
+                            elements.voiceStatusDisplay.textContent = '⚠️ Voz por defecto';
+                            elements.voiceStatusBadge.textContent = '⚠️ Por defecto';
+                            elements.voiceStatusBadge.className = 'voice-status warning';
+                            voicesLoaded = true;
+                            resolve(true);
+                        }
+                        return;
+                    }
+
+                    let spanishVoices = allVoices.filter(voice => voice.lang.startsWith('es'));
+                    
+                    if (spanishVoices.length === 0) {
+                        addLog('⚠️ No hay voces en español. Usando voz por defecto.', 'warning');
+                        elements.spanishVoiceSelect.innerHTML = '<option value="default">🔊 Voz por defecto</option>';
+                        elements.voiceStatusDisplay.textContent = '⚠️ Sin voz ES';
+                        elements.voiceStatusBadge.textContent = '⚠️ Sin ES';
+                        elements.voiceStatusBadge.className = 'voice-status warning';
+                        voicesLoaded = true;
+                        resolve(true);
+                        return;
+                    }
+                    
+                    // Ordenar: preferir Google y Microsoft
+                    spanishVoices.sort((a, b) => {
+                        const aGood = a.name.includes('Google') || a.name.includes('Microsoft') || a.name.includes('Natural');
+                        const bGood = b.name.includes('Google') || b.name.includes('Microsoft') || b.name.includes('Natural');
+                        if (aGood && !bGood) return -1;
+                        if (!aGood && bGood) return 1;
+                        return a.name.localeCompare(b.name);
+                    });
+                    
+                    elements.spanishVoiceSelect.innerHTML = '';
+                    spanishVoices.forEach(voice => {
+                        const option = document.createElement('option');
+                        option.value = voice.name;
+                        let emoji = '🎙️';
+                        if (voice.name.includes('Google')) emoji = '🌟';
+                        if (voice.name.includes('Microsoft')) emoji = '💎';
+                        option.textContent = `${emoji} ${voice.name} (${voice.lang})`;
+                        elements.spanishVoiceSelect.appendChild(option);
+                    });
+                    
+                    // Seleccionar la primera voz automáticamente
+                    if (spanishVoices.length > 0) {
+                        elements.spanishVoiceSelect.value = spanishVoices[0].name;
+                        addLog(`✅ Voz seleccionada: ${spanishVoices[0].name}`, 'success');
+                    }
+                    
+                    elements.voiceStatusDisplay.textContent = `✅ ${spanishVoices.length} voces`;
+                    elements.voiceStatusBadge.textContent = `✅ Listo`;
+                    elements.voiceStatusBadge.className = 'voice-status ready';
+                    voicesLoaded = true;
+                    addLog(`✅ ${spanishVoices.length} voces en español cargadas`, 'success');
+                    resolve(true);
+                };
+
+                // Intentar cargar voces
+                if (window.speechSynthesis.getVoices().length > 0) {
+                    checkVoices();
+                } else {
+                    window.speechSynthesis.onvoiceschanged = checkVoices;
+                    // Timeout por si el evento no se dispara
+                    setTimeout(checkVoices, 1000);
+                }
+            });
         }
 
         function getSelectedVoice() {
             const selectedName = elements.spanishVoiceSelect.value;
+            if (selectedName === 'default' || !selectedName) {
+                return null;
+            }
             const voices = window.speechSynthesis.getVoices();
             return voices.find(voice => voice.name === selectedName && voice.lang.startsWith('es'));
+        }
+
+        // ========== PROBAR VOZ ==========
+        function testVoice() {
+            addLog('🔊 Probando voz...', 'info');
+            const testText = 'Hola, esto es una prueba de voz. ¿Me escuchas?';
+            const utterance = new SpeechSynthesisUtterance(testText);
+            const voice = getSelectedVoice();
+            if (voice) {
+                utterance.voice = voice;
+                utterance.lang = voice.lang;
+                addLog(`🎤 Usando voz: ${voice.name}`, 'success');
+            } else {
+                utterance.lang = 'es-ES';
+                addLog('🎤 Usando voz por defecto', 'warning');
+            }
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            utterance.onstart = () => {
+                addLog('🔊 Reproduciendo prueba de voz...', 'success');
+                elements.voiceStatusDisplay.textContent = '🔊 Probando...';
+            };
+            
+            utterance.onend = () => {
+                addLog('✅ Prueba de voz completada', 'success');
+                elements.voiceStatusDisplay.textContent = '✅ Voz funcionando';
+            };
+            
+            utterance.onerror = (e) => {
+                addLog(`❌ Error en prueba de voz: ${e.error}`, 'error');
+                elements.voiceStatusDisplay.textContent = '❌ Error en voz';
+            };
+            
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
         }
 
         // ========== FUNCIONES DE LECTURA ==========
@@ -565,14 +575,14 @@
             
             const text = currentFile.text;
             if (start === undefined || end === undefined || start >= end) {
-                elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(text)}</div>`;
+                elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', monospace; font-size: 14px;">${escapeHtml(text)}</div>`;
                 return;
             }
 
             start = Math.max(0, start);
             end = Math.min(text.length, end);
             if (start >= end) {
-                elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(text)}</div>`;
+                elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', monospace; font-size: 14px;">${escapeHtml(text)}</div>`;
                 return;
             }
 
@@ -580,7 +590,7 @@
             const chunk = text.substring(start, end);
             const after = text.substring(end);
 
-            const html = `<span style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(before)}<span class="highlight-chunk">${escapeHtml(chunk)}</span>${escapeHtml(after)}</span>`;
+            const html = `<span style="white-space: pre-wrap; font-family: 'Segoe UI', monospace; font-size: 14px;">${escapeHtml(before)}<span class="highlight-chunk">${escapeHtml(chunk)}</span>${escapeHtml(after)}</span>`;
             elements.textDisplay.innerHTML = html;
 
             const highlightElement = elements.textDisplay.querySelector('.highlight-chunk');
@@ -592,13 +602,21 @@
         function clearHighlight() {
             const currentFile = fileQueue[currentQueueIndex];
             if (currentFile && currentFile.text) {
-                elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(currentFile.text)}</div>`;
+                elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', monospace; font-size: 14px;">${escapeHtml(currentFile.text)}</div>`;
             }
         }
 
         function readCurrentFile() {
             const currentFile = fileQueue[currentQueueIndex];
             if (!currentFile || !currentFile.text || currentFile.text.trim() === "") {
+                addLog(`❌ El archivo "${currentFile ? currentFile.name : '?'}" no tiene texto`, 'error');
+                return false;
+            }
+
+            // Verificar que las voces estén listas
+            if (!voicesLoaded) {
+                addLog('⏳ Esperando que las voces se carguen...', 'warning');
+                setTimeout(() => readCurrentFile(), 1000);
                 return false;
             }
 
@@ -612,6 +630,8 @@
             updateQueueUI();
 
             const text = currentFile.text;
+            addLog(`📖 Leyendo "${currentFile.name}" (${text.length} caracteres)`, 'info');
+            
             const CHUNK_SIZE = 60000;
             textChunks = [];
             for (let i = 0; i < text.length; i += CHUNK_SIZE) {
@@ -646,6 +666,7 @@
                     isReading = false;
                     elements.progressBar.style.width = '100%';
                     elements.fileProgress.textContent = '100%';
+                    addLog(`✅ "${currentFile.name}" completado`, 'success');
                     setTimeout(() => {
                         elements.progressBar.style.width = '0%';
                         elements.fileProgress.textContent = '0%';
@@ -679,6 +700,14 @@
             
             highlightChunk(chunkData.start, chunkData.end);
             
+            utterance.onstart = () => {
+                // Solo log cuando empieza un nuevo archivo
+                if (currentChunkIndex === 0) {
+                    const currentFile = fileQueue[currentQueueIndex];
+                    addLog(`🔊 Reproduciendo "${currentFile ? currentFile.name : '?'}"`, 'success');
+                }
+            };
+            
             utterance.onend = () => {
                 currentChunkIndex++;
                 const progress = (currentChunkIndex / textChunks.length) * 100;
@@ -688,7 +717,7 @@
             };
             
             utterance.onerror = (event) => {
-                console.warn("Error en lectura:", event);
+                addLog(`⚠️ Error en chunk ${currentChunkIndex + 1}: ${event.error}`, 'warning');
                 currentChunkIndex++;
                 speakNextChunk();
             };
@@ -697,7 +726,7 @@
             window.speechSynthesis.speak(utterance);
             
             const currentFile = fileQueue[currentQueueIndex];
-            elements.queueStatus.textContent = `🎙️ Leyendo "${currentFile ? currentFile.name : ''}" - fragmento ${currentChunkIndex + 1} de ${textChunks.length}`;
+            elements.queueStatus.textContent = `🎙️ Leyendo "${currentFile ? currentFile.name : ''}" - ${currentChunkIndex + 1}/${textChunks.length}`;
         }
 
         function goToNextFileOrLoop() {
@@ -727,10 +756,12 @@
                         });
                         nextIndex = 0;
                     }
+                    addLog('🔄 Reiniciando cola (bucle infinito)', 'info');
                     elements.queueStatus.textContent = '🔄 Reiniciando cola (bucle infinito)...';
                     elements.loopIndicator.style.display = 'inline-block';
                 } else {
                     isQueuePlaying = false;
+                    addLog('✅ Todos los archivos han sido leídos (bucle desactivado)', 'success');
                     elements.queueStatus.textContent = '✅ Todos los archivos han sido leídos';
                     elements.loopIndicator.style.display = 'none';
                     return;
@@ -761,6 +792,7 @@
                 if (window.speechSynthesis && window.speechSynthesis.speaking) {
                     window.speechSynthesis.pause();
                 }
+                addLog('⏸️ Pausado', 'info');
                 elements.queueStatus.textContent = '⏸️ Pausado';
             }
         }
@@ -773,6 +805,7 @@
                 } else {
                     speakNextChunk();
                 }
+                addLog('▶️ Reanudando', 'info');
                 elements.queueStatus.textContent = '▶️ Reanudando...';
             }
         }
@@ -794,6 +827,7 @@
                 currentFile.status = 'pending';
                 updateQueueUI();
             }
+            addLog('⏹️ Detenido', 'info');
         }
 
         // ========== ACTUALIZAR UI ==========
@@ -906,11 +940,13 @@
             elements.progressBar.style.width = '0%';
             elements.fileProgress.textContent = '0%';
             elements.loopIndicator.style.display = 'none';
+            addLog('🗑️ Cola vaciada', 'info');
         }
 
         // ========== PROCESAR ARCHIVOS ==========
         async function processFiles(files) {
             const filesArray = Array.from(files);
+            addLog(`📥 Procesando ${filesArray.length} archivos...`, 'info');
             
             for (const file of filesArray) {
                 const fileId = fileIdCounter++;
@@ -930,16 +966,20 @@
             for (const item of fileQueue) {
                 if (item.status === 'pending' && !item.text) {
                     try {
+                        addLog(`📖 Extrayendo texto de "${item.name}"...`, 'info');
                         const text = await extractText(item.file);
                         item.text = text;
                         if (text.trim() === "") {
                             item.status = 'error';
                             item.text = "[Sin texto extraíble]";
+                            addLog(`⚠️ "${item.name}" no tiene texto extraíble`, 'warning');
+                        } else {
+                            addLog(`✅ "${item.name}" extraído (${text.length} caracteres)`, 'success');
                         }
                     } catch (error) {
                         item.status = 'error';
                         item.text = `[Error: ${error.message}]`;
-                        console.error(`Error procesando ${item.name}:`, error);
+                        addLog(`❌ Error en "${item.name}": ${error.message}`, 'error');
                     }
                     updateQueueUI();
                 }
@@ -948,14 +988,18 @@
             if (fileQueue.length > 0 && !isReading) {
                 currentQueueIndex = 0;
                 const firstFile = fileQueue[0];
-                if (firstFile.text) {
+                if (firstFile.text && firstFile.text !== "[Sin texto extraíble]" && firstFile.text !== `[Error: ${firstFile.text.includes('Error') ? firstFile.text : ''}]`) {
                     elements.currentFileName.textContent = firstFile.name;
                     elements.charCounter.textContent = firstFile.text.length.toLocaleString() + " caracteres";
                     displayText(firstFile.text);
+                    addLog(`📄 Mostrando "${firstFile.name}"`, 'info');
+                } else {
+                    addLog(`⚠️ El primer archivo "${firstFile.name}" no tiene texto válido`, 'warning');
                 }
             }
             
-            elements.fileInfo.textContent = `✅ ${fileQueue.length} archivos listos`;
+            elements.fileInfo.textContent = `✅ ${fileQueue.length} archivos listos (${fileQueue.filter(f => f.status === 'error').length} con error)`;
+            addLog(`✅ Procesamiento completado. ${fileQueue.filter(f => f.status === 'error').length} archivos con error.`, 'info');
         }
 
         async function extractText(file) {
@@ -991,11 +1035,11 @@
         }
 
         function displayText(text) {
-            if (!text || text.trim() === "") {
+            if (!text || text.trim() === "" || text.startsWith("[Sin texto") || text.startsWith("[Error:")) {
                 elements.textDisplay.innerHTML = "<div style='color:#aaa'>⚠️ No se pudo extraer texto</div>";
                 return;
             }
-            elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', 'Symbola', 'Noto Sans', monospace; font-size: 14px;">${escapeHtml(text)}</div>`;
+            elements.textDisplay.innerHTML = `<div style="white-space: pre-wrap; font-family: 'Segoe UI', monospace; font-size: 14px;">${escapeHtml(text)}</div>`;
             elements.textDisplay.scrollTop = 0;
         }
 
@@ -1057,76 +1101,63 @@
             });
         }
 
-        // ========== MONITOREO DE AUDIO ==========
-        function setupAudioMonitor() {
-            setInterval(() => {
-                // Si está reproduciendo y el audio se detuvo inesperadamente
-                if (isQueuePlaying && isReading && !isPaused) {
-                    if (window.speechSynthesis && !window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
-                        console.log('⚠️ Audio detenido inesperadamente, reanudando...');
-                        if (currentChunkIndex < textChunks.length) {
-                            speakNextChunk();
-                        } else {
-                            goToNextFileOrLoop();
-                        }
-                    }
-                }
-                
-                // Verificar si la página está visible
-                if (document.hidden) {
-                    // La página está oculta (pantalla apagada), pero el audio sigue
-                    elements.batteryStatus.textContent = '🔋 Audio activo (pantalla apagada)';
-                    elements.batteryStatus.className = 'battery-mode';
-                } else {
-                    elements.batteryStatus.textContent = '🔋 Modo Ahorro';
-                    elements.batteryStatus.className = 'battery-mode';
-                }
-            }, 3000);
-        }
-
         // ========== INICIALIZAR ==========
-        function init() {
-            // Iniciar video fantasma
-            initGhostVideo();
+        async function init() {
+            addLog('🚀 Iniciando sistema...', 'info');
             
-            // Configurar reanudación automática
-            setupAutoResume();
+            // Cargar voces primero
+            await loadSpanishVoices();
             
-            // Configurar monitor de audio
-            setupAudioMonitor();
-            
-            // Drag & Drop
+            // Configurar Drag & Drop
             setupDragAndDrop();
-            
-            // Voces
-            loadSpanishVoices();
             
             // Mostrar bucle activo
             elements.loopIndicator.style.display = 'inline-block';
             
+            // Botón de prueba de voz
+            elements.testVoiceBtn.addEventListener('click', testVoice);
+            
             // Botón de reproducción
-            elements.readBtn.addEventListener('click', () => {
+            elements.readBtn.addEventListener('click', async () => {
                 if (fileQueue.length === 0) {
                     alert('No hay archivos en la cola. Sube uno o varios archivos primero.');
                     return;
                 }
                 
+                // Verificar que haya voces
+                if (!voicesLoaded) {
+                    addLog('⏳ Esperando que las voces se carguen...', 'warning');
+                    await loadSpanishVoices();
+                    if (!voicesLoaded) {
+                        alert('Las voces no se han cargado correctamente. Usa el botón "Probar Voz" para verificar.');
+                        return;
+                    }
+                }
+                
+                // Resetear estados
                 fileQueue.forEach(f => {
                     if (f.status === 'done' || f.status === 'error') {
                         f.status = 'pending';
                     }
                 });
                 
+                // Verificar que haya archivos con texto
+                const validFiles = fileQueue.filter(f => f.text && f.text.trim() !== "" && !f.text.startsWith("[Sin texto") && !f.text.startsWith("[Error:"));
+                if (validFiles.length === 0) {
+                    alert('No hay archivos con texto válido. Revisa los archivos y vuelve a subirlos.');
+                    return;
+                }
+                
                 let startIndex = -1;
                 for (let i = 0; i < fileQueue.length; i++) {
-                    if (fileQueue[i].status === 'pending') {
+                    if (fileQueue[i].status === 'pending' && fileQueue[i].text && fileQueue[i].text.trim() !== "" && !fileQueue[i].text.startsWith("[Sin texto") && !fileQueue[i].text.startsWith("[Error:")) {
                         startIndex = i;
                         break;
                     }
                 }
                 
                 if (startIndex === -1) {
-                    alert('No hay archivos pendientes.');
+                    alert('No hay archivos pendientes con texto válido.');
                     return;
                 }
                 
@@ -1142,20 +1173,8 @@
                 if (file.text) {
                     displayText(file.text);
                 }
+                addLog(`▶️ Iniciando reproducción con "${file.name}"`, 'success');
                 readCurrentFile();
-                
-                // Activar video fantasma
-                const video = document.getElementById('ghostVideo');
-                if (video) {
-                    video.play().catch(e => {});
-                }
-                
-                // Mostrar mensaje
-                elements.instructionBanner.innerHTML = `
-                    🔥 <strong>¡AUDIO ACTIVO!</strong> Ahora puedes <strong>APAGAR LA PANTALLA</strong> y el audio seguirá sonando.<br>
-                    Para reanudar, solo desbloquea el teléfono.
-                `;
-                elements.instructionBanner.className = 'warning-banner success';
             });
             
             elements.nextFileBtn.addEventListener('click', () => {
@@ -1199,16 +1218,11 @@
                 isLooping = false;
                 elements.loopIndicator.style.display = 'none';
                 elements.queueStatus.textContent = '⏹️ Detenido';
+                addLog('⏹️ Reproducción detenida', 'info');
                 const currentFile = fileQueue[currentQueueIndex];
                 if (currentFile && currentFile.status === 'reading') {
                     currentFile.status = 'pending';
                     updateQueueUI();
-                }
-                
-                // Detener video fantasma
-                const video = document.getElementById('ghostVideo');
-                if (video) {
-                    video.pause();
                 }
             });
             
@@ -1217,11 +1231,9 @@
                 if (window.speechSynthesis) {
                     window.speechSynthesis.cancel();
                 }
-                const video = document.getElementById('ghostVideo');
-                if (video) {
-                    video.pause();
-                }
             });
+
+            addLog('✅ Sistema listo', 'success');
         }
         
         // Iniciar cuando la página esté lista
