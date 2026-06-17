@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🔊 Lector con TODAS las Voces</title>
+    <title>🔊 Lector Completo - Todas las Voces + TXT</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -38,7 +38,7 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        .drop-zone:hover { border-color: #ffd89b; }
+        .drop-zone:hover { border-color: #ffd89b; background: rgba(255,255,255,0.05); }
 
         .file-input-label {
             background: #ffd89b;
@@ -51,7 +51,9 @@
             margin-top: 15px;
             border: none;
             font-size: 16px;
+            transition: 0.3s;
         }
+        .file-input-label:hover { background: #ffc267; transform: scale(1.05); }
 
         input[type="file"] { display: none; }
 
@@ -72,8 +74,6 @@
         .btn-info { background: #17a2b8; color: white; }
         .btn-warning { background: #ffc107; color: #1a2c3e; }
         .btn-purple { background: #6f42c1; color: white; }
-        .btn-pink { background: #e83e8c; color: white; }
-        .btn-teal { background: #20c997; color: white; }
 
         .text-container {
             background: rgba(255,255,255,0.95);
@@ -308,6 +308,18 @@
 
         .text-preview.has-text { color: #fff; border-color: #28a745; }
 
+        .input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .input-group textarea {
+            flex: 1;
+            min-width: 200px;
+        }
+
         @media (max-width: 768px) {
             .header h1 { font-size: 1.5rem; }
             .btn { padding: 8px 14px; font-size: 12px; }
@@ -318,10 +330,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔊 Lector con TODAS las Voces</h1>
-            <p>Prueba cada voz y elige la que funciona en tu celular</p>
+            <h1>🔊 Lector Completo</h1>
+            <p>Prueba cada voz | Sube TXT | Pega texto | Bucle infinito</p>
             <div class="badge">
-                🎙️ <span id="voiceCount">0</span> voces disponibles | 🔁 Bucle Infinito
+                🎙️ <span id="voiceCount">0</span> voces | 📄 Sube TXT | 🔁 Bucle Infinito
                 <span class="loop-indicator" id="loopIndicator">🔁 BUCLE ACTIVO</span>
             </div>
         </div>
@@ -345,30 +357,46 @@
             </div>
         </div>
 
-        <!-- LISTA DE VOCES -->
         <div class="upload-card">
+            <!-- ===== SUBIR ARCHIVOS TXT ===== -->
+            <div id="dropZone" class="drop-zone">
+                <div style="font-size: 40px;">📄</div>
+                <p><strong>Sube archivos TXT</strong> (arrastra o haz clic)</p>
+                <label class="file-input-label">
+                    📁 Seleccionar TXT
+                    <input type="file" id="fileInput" accept=".txt" multiple>
+                </label>
+                <div id="fileInfo" style="margin-top: 10px; font-size: 13px; opacity: 0.7;"></div>
+            </div>
+
+            <!-- ===== PEGAR TEXTO MANUAL ===== -->
+            <div style="margin-top: 15px;">
+                <p style="font-size: 13px; opacity: 0.7; margin-bottom: 8px;">📝 O pega tu texto aquí:</p>
+                <div class="input-group">
+                    <textarea id="manualText" style="flex:1; padding:12px; border-radius:15px; border:none; background:rgba(255,255,255,0.1); color:#fff; font-size:14px; resize:vertical; min-height:60px;" placeholder="Pega aquí el texto que quieres escuchar..."></textarea>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <button id="addManualTextBtn" class="btn btn-success">➕ Agregar</button>
+                        <button id="addSampleBtn" class="btn btn-info">📝 Ejemplo</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== LISTA DE VOCES ===== -->
             <div class="voices-container">
-                <div class="voices-title">🎤 TODAS LAS VOCES DISPONIBLES:</div>
+                <div class="voices-title">🎤 TODAS LAS VOCES DISPONIBLES (prueba cada una):</div>
                 <div class="voices-grid" id="voicesGrid">
                     <div style="color: #aaa; padding: 10px; text-align: center;">Cargando voces...</div>
                 </div>
                 <div style="margin-top: 10px; text-align: center; font-size: 12px; opacity: 0.5;">
-                    💡 Cada voz tiene un botón "Probar" para escucharla
+                    💡 Haz clic en una voz para seleccionarla | Botón "Probar" para escucharla
                 </div>
             </div>
 
-            <!-- Área para pegar texto -->
-            <div style="margin-top: 15px;">
-                <p style="font-size: 13px; opacity: 0.7; margin-bottom: 8px;">📝 Pega tu texto de estudio aquí:</p>
-                <textarea id="manualText" style="width:100%; padding:12px; border-radius:15px; border:none; background:rgba(255,255,255,0.1); color:#fff; font-size:14px; resize:vertical; min-height:60px;" placeholder="Pega aquí el texto que quieres escuchar..."></textarea>
-                <button id="addManualTextBtn" class="btn btn-success" style="margin-top:8px;">➕ Agregar texto</button>
-                <button id="addSampleBtn" class="btn btn-info">📝 Agregar Ejemplo</button>
-            </div>
-
+            <!-- ===== COLA ===== -->
             <div class="file-queue" id="fileQueue">
                 <div class="file-queue-title">📋 Cola de estudio (<span id="queueCount">0</span>)</div>
                 <div class="file-queue-list" id="queueList">
-                    <div style="color: #aaa; font-size: 13px; padding: 10px;">Agrega texto usando el área de arriba</div>
+                    <div style="color: #aaa; font-size: 13px; padding: 10px;">Sube archivos TXT o pega texto</div>
                 </div>
                 <div class="btn-group">
                     <button id="playQueueBtn" class="btn btn-success">▶️ Iniciar Estudio</button>
@@ -390,7 +418,7 @@
                 <span id="fileProgress">0%</span>
             </div>
             <div id="textDisplay" class="text-content">
-                <div style="color: #aaa; text-align: center;">📚 Agrega texto y elige una voz</div>
+                <div style="color: #aaa; text-align: center;">📚 Sube TXT, pega texto y elige una voz</div>
             </div>
             <div style="padding: 10px 25px 15px; border-top: 1px solid #eee;">
                 <div style="font-size: 12px; color: #888; margin-bottom: 5px;">📋 Vista previa:</div>
@@ -401,19 +429,22 @@
         <div class="log-panel" id="logPanel">
             <div style="color: #ffd89b; font-weight: bold; margin-bottom: 10px;">📋 REGISTRO</div>
             <div id="logEntries">
-                <div class="log-entry"><span class="time">[INICIO]</span><span class="msg">Sistema listo. Elige una voz y agrega texto.</span></div>
+                <div class="log-entry"><span class="time">[INICIO]</span><span class="msg">Sistema listo. Prueba las voces y agrega texto.</span></div>
             </div>
         </div>
 
         <footer>
-            🎤 Prueba CADA voz con el botón "Probar" | La que funcione, la seleccionas<br>
-            🔁 Bucle infinito | 📱 Optimizado para móviles
+            🎤 Prueba CADA voz | 📄 Sube archivos TXT | 📝 Pega texto | 🔁 Bucle infinito<br>
+            📱 Optimizado para móviles
         </footer>
     </div>
 
     <script>
         // ========== ELEMENTOS ==========
         const elements = {
+            dropZone: document.getElementById('dropZone'),
+            fileInput: document.getElementById('fileInput'),
+            fileInfo: document.getElementById('fileInfo'),
             manualText: document.getElementById('manualText'),
             addManualTextBtn: document.getElementById('addManualTextBtn'),
             addSampleBtn: document.getElementById('addSampleBtn'),
@@ -482,7 +513,6 @@
                 
                 if (allVoices.length === 0) {
                     elements.voicesGrid.innerHTML = '<div style="color: #ffc107;">⏳ Cargando voces... (espera un momento)</div>';
-                    // Reintentar después de 1 segundo
                     setTimeout(updateVoices, 1000);
                     return;
                 }
@@ -490,7 +520,6 @@
                 elements.voiceCount.textContent = allVoices.length;
                 elements.voicesGrid.innerHTML = '';
 
-                // Ordenar: primero español, luego inglés, luego otros
                 const sortedVoices = [...allVoices].sort((a, b) => {
                     const aEs = a.lang.startsWith('es');
                     const bEs = b.lang.startsWith('es');
@@ -516,13 +545,11 @@
                         <button class="voice-test-btn" data-voice-name="${voice.name}">🔊 Probar</button>
                     `;
 
-                    // Click en la voz para seleccionarla
                     div.addEventListener('click', (e) => {
                         if (e.target.classList.contains('voice-test-btn')) return;
                         selectVoice(voice);
                     });
 
-                    // Botón de probar
                     const testBtn = div.querySelector('.voice-test-btn');
                     testBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -532,7 +559,6 @@
                     elements.voicesGrid.appendChild(div);
                 });
 
-                // Seleccionar primera voz en español si no hay seleccionada
                 if (!selectedVoice) {
                     const firstSpanish = sortedVoices.find(v => v.lang.startsWith('es'));
                     if (firstSpanish) {
@@ -558,7 +584,6 @@
             elements.selectedVoiceName.textContent = voice.name;
             addLog(`🎤 Voz seleccionada: ${voice.name} (${voice.lang})`, 'success');
 
-            // Actualizar UI
             document.querySelectorAll('.voice-item').forEach(el => {
                 el.classList.remove('selected');
                 const nameSpan = el.querySelector('.voice-name');
@@ -597,11 +622,9 @@
                 button.textContent = '✅ OK';
                 button.className = 'voice-test-btn working';
                 addLog(`✅ Voz funciona: ${voice.name}`, 'success');
-                // Si no hay voz seleccionada, seleccionar esta
                 if (!selectedVoice) {
                     selectVoice(voice);
                 }
-                // Si la voz seleccionada es esta, actualizar
                 if (selectedVoice && selectedVoice.name === voice.name) {
                     elements.selectedVoiceName.textContent = voice.name + ' ✅';
                 }
@@ -655,6 +678,27 @@
                 elements.charCounter.textContent = text.length.toLocaleString() + " caracteres";
                 displayText(text);
             }
+        }
+
+        // ========== PROCESAR ARCHIVOS TXT ==========
+        async function processFiles(files) {
+            const filesArray = Array.from(files);
+            addLog(`📥 Procesando ${filesArray.length} archivos TXT...`, 'info');
+            
+            for (const file of filesArray) {
+                try {
+                    const text = await file.text();
+                    if (text.trim() === "") {
+                        addLog(`⚠️ "${file.name}" está vacío`, 'warning');
+                        continue;
+                    }
+                    addTextToQueue(file.name, text);
+                } catch (error) {
+                    addLog(`❌ Error en "${file.name}": ${error.message}`, 'error');
+                }
+            }
+            
+            elements.fileInfo.textContent = `✅ ${fileQueue.length} archivos en cola`;
         }
 
         // ========== FUNCIONES DE LECTURA ==========
@@ -1038,12 +1082,42 @@
             });
         }
 
+        // ========== DRAG & DROP ==========
+        function setupDragAndDrop() {
+            elements.dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                elements.dropZone.style.borderColor = '#ffd89b';
+            });
+            elements.dropZone.addEventListener('dragleave', () => {
+                elements.dropZone.style.borderColor = 'rgba(255,255,255,0.5)';
+            });
+            elements.dropZone.addEventListener('drop', async (e) => {
+                e.preventDefault();
+                elements.dropZone.style.borderColor = 'rgba(255,255,255,0.5)';
+                if (e.dataTransfer.files.length) {
+                    stopReading();
+                    await processFiles(e.dataTransfer.files);
+                }
+            });
+            elements.dropZone.addEventListener('click', () => elements.fileInput.click());
+            elements.fileInput.addEventListener('change', async (e) => {
+                if (elements.fileInput.files.length) {
+                    stopReading();
+                    await processFiles(elements.fileInput.files);
+                    elements.fileInput.value = '';
+                }
+            });
+        }
+
         // ========== INICIALIZAR ==========
         function init() {
             addLog('🚀 Iniciando sistema...', 'info');
             
             // Cargar voces
             loadAndDisplayVoices();
+            
+            // Drag & Drop para TXT
+            setupDragAndDrop();
             
             // Mostrar bucle activo
             elements.loopIndicator.style.display = 'inline-block';
@@ -1064,13 +1138,13 @@
             elements.addSampleBtn.addEventListener('click', () => {
                 const sampleText = `Este es un texto de ejemplo para probar el lector de audio.
 
-                Puedes usar este lector para estudiar mientras duermes. Solo pega tu texto manualmente.
+                Puedes usar este lector para estudiar mientras duermes. Sube archivos TXT o pega tu texto manualmente.
 
                 El sistema leerá todos los textos en orden y cuando termine, volverá a empezar desde el primero. Esto se repite infinitamente.
 
                 Para usar el lector:
-                1. Elige una voz que funcione (prueba cada una)
-                2. Pega tu texto de estudio
+                1. Elige una voz que funcione (prueba cada una con el botón "Probar")
+                2. Sube archivos TXT o pega texto
                 3. Presiona "Iniciar Estudio"
                 4. El audio comenzará a reproducirse
                 5. Puedes apagar la pantalla y el audio seguirá sonando
@@ -1083,7 +1157,7 @@
             // Botón de reproducción
             elements.readBtn.addEventListener('click', () => {
                 if (fileQueue.length === 0) {
-                    alert('No hay texto en la cola. Pega texto primero.');
+                    alert('No hay texto en la cola. Sube archivos TXT o pega texto.');
                     return;
                 }
                 
@@ -1187,7 +1261,7 @@
                 }
             });
 
-            addLog('✅ Sistema listo. Prueba cada voz y elige la que funciona.', 'success');
+            addLog('✅ Sistema listo. Sube TXT, pega texto y prueba las voces.', 'success');
         }
         
         document.addEventListener('DOMContentLoaded', init);
